@@ -4,6 +4,8 @@
 import express from "express";
 import  connectToMongoDB  from "./connection.js";
 import urlRoutes from "./routes/url.js";
+import path from "path";
+import URL from "./models/url.js"
 
 const app = express();
 const PORT = 8001;
@@ -11,11 +13,21 @@ const PORT = 8001;
 connectToMongoDB("mongodb://localhost:27017/short-url")
 .then(() => console.log("MongoDb connected"));
 
+app.set("view engine", "ejs");
+app.set("views", path.resolve("./views"));
+
 app.use(express.json());
+
+app.get("/test", async (req, res) => {
+  const allurls = await URL.find({});
+  return res.render('home' , {
+    urls: allurls
+  });
+});
 
 app.use("/url", urlRoutes);
 
-app.get('/"shortId', async(req, res) => {
+app.get('/url/:shortId', async(req, res) => {
     const shortId = req.params.shortId;
     const entry = await URL.findOneAndUpdate(
     {
