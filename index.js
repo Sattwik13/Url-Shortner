@@ -3,10 +3,13 @@
 // const urlRoutes = require("./routes/url.js");
 import express from "express";
 import  connectToMongoDB  from "./connection.js";
-import urlRoutes from "./routes/url.js";
+
 import path from "path";
 import URL from "./models/url.js";
+
+import urlRoutes from "./routes/url.js";
 import staticRoute from "./routes/staticRouter.js";
+import userRoute from "./routes/user.js";
 
 const app = express();
 const PORT = 8001;
@@ -27,6 +30,7 @@ app.use(express.urlencoded({ extended: false}));
 //   });
 // });
 
+app.use("/user", userRoute);
 app.use("/url", urlRoutes);
 app.use("/", staticRoute);
 
