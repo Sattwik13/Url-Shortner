@@ -11,7 +11,11 @@ const urlSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    visitHistory: [{ timestamp: { type: Number } }] // how many click on URL
+    visitHistory: [{ timestamp: { type: Number } }], // how many click on URL
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user"
+    }
 },
 { timestamps: true }
 );

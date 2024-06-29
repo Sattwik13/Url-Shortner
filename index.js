@@ -11,6 +11,9 @@ import urlRoutes from "./routes/url.js";
 import staticRoute from "./routes/staticRouter.js";
 import userRoute from "./routes/user.js";
 
+import cookieParser from "cookie-parser";
+import { restrictToLoggedinUserOnly, checkAuth } from "./middlewares/auth.js";
+
 const app = express();
 const PORT = 8001;
 
@@ -22,6 +25,7 @@ app.set("views", path.resolve("./views"));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false}));
+app.use(cookieParser());
 
 // app.get("/test", async (req, res) => {
 //   const allurls = await URL.find({});
@@ -31,8 +35,8 @@ app.use(express.urlencoded({ extended: false}));
 // });
 
 app.use("/user", userRoute);
-app.use("/url", urlRoutes);
-app.use("/", staticRoute);
+app.use("/url", restrictToLoggedinUserOnly, urlRoutes);
+app.use("/", checkAuth, staticRoute);
 
 app.get('/url/:shortId', async(req, res) => {
     const shortId = req.params.shortId;
