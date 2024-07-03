@@ -1,14 +1,28 @@
-const sessionIdToUserMap = new Map();
+//--> stateless authentication
+import jwt from "jsonwebtoken";
 
-export function setUser(id, user ) {
-    sessionIdToUserMap.set(id, user);
+const secret = "SattMann@121";
+
+ function setUser(user) {
+    return jwt.sign(
+        {
+           _id: user._id,
+           email: user.email,
+        }, 
+        secret
+    );
+}
+
+ function getUser(token) {
+    if(!token) return null;
+    try {
+        return jwt.verify(token, secret);
+    } catch(error) {
+        return null;
+    }    
+}
+
+export {
+    setUser,
+    getUser
 };
-
-export function getUser(id) {
-    return sessionIdToUserMap.get(id);
-};
-
-// export {
-//     setUser,
-//     getUser
-// };

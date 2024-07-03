@@ -12,7 +12,8 @@ import staticRoute from "./routes/staticRouter.js";
 import userRoute from "./routes/user.js";
 
 import cookieParser from "cookie-parser";
-import { restrictToLoggedinUserOnly, checkAuth } from "./middlewares/auth.js";
+// import { restrictToLoggedinUserOnly, checkAuth } from "./middlewares/auth.js";
+import { checkForAuthentication, restrictTo} from "./middlewares/auth.js";
 
 const app = express();
 const PORT = 8001;
@@ -26,6 +27,7 @@ app.set("views", path.resolve("./views"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false}));
 app.use(cookieParser());
+app.use(checkForAuthentication);
 
 // app.get("/test", async (req, res) => {
 //   const allurls = await URL.find({});
@@ -35,8 +37,11 @@ app.use(cookieParser());
 // });
 
 app.use("/user", userRoute);
-app.use("/url", restrictToLoggedinUserOnly, urlRoutes);
-app.use("/", checkAuth, staticRoute);
+// app.use("/url", restrictToLoggedinUserOnly, urlRoutes);
+// app.use("/", checkAuth, staticRoute);
+app.use("/url", restrictTo(["NORMAL"]), urlRoutes);
+app.use("/", staticRoute);
+
 
 app.get('/url/:shortId', async(req, res) => {
     const shortId = req.params.shortId;
