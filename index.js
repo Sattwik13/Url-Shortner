@@ -39,7 +39,7 @@ app.use(checkForAuthentication);
 app.use("/user", userRoute);
 // app.use("/url", restrictToLoggedinUserOnly, urlRoutes);
 // app.use("/", checkAuth, staticRoute);
-app.use("/url", restrictTo(["NORMAL"]), urlRoutes);
+app.use("/url", restrictTo(["NORMAL", "ADMIN"]), urlRoutes);
 app.use("/", staticRoute);
 
 
